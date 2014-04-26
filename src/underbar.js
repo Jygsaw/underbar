@@ -169,10 +169,30 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-    var result = accumulator === undefined ? collection[0] : accumulator;
-    for (var i = 0; i < collection.length; i++) {
-      result = iterator(result, collection[i]);
+    // initializing result and extracting first value
+    var result = accumulator;
+    var item;
+    if (Array.isArray(collection)) {
+      item = collection.pop();
+    } else {
+      var itemKey = Object.keys(collection)[0];
+      item = collection[itemKey];
+      delete collection[itemKey];
     }
+
+    // combining result with first value using iterator
+    if (result === undefined) {
+      result = item;
+    } else {
+      result = iterator(result, item);
+    }
+
+    // recursing through rest of collection
+    if (Object.keys(collection).length > 0) {
+      result = _.reduce(collection, iterator, result);
+    }
+
+    // returning result
     return result;
   };
 
