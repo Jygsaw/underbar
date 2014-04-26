@@ -144,6 +144,15 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    var result = [];
+    for (var i = 0; i < collection.length; i++) {
+      if (functionOrKey.length) {
+        result.push(collection[i][functionOrKey]());
+      } else {
+        result.push(functionOrKey.apply(collection[i], args));
+      }
+    }
+    return result;
   };
 
   // Reduces an array or object to a single value by repetitively calling
