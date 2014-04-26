@@ -226,6 +226,15 @@ var _ = {};
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    var iterator = iterator === undefined ? _.identity : iterator;
+    var result = false;
+    if (Object.keys(collection).length > 0) {
+      result = _.every(collection, function(item) {
+        return iterator(item) ? false : true;
+      });
+      result = result ? false : true;
+    }
+    return result;
   };
 
 
