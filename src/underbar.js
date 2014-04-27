@@ -273,6 +273,19 @@ var _ = {};
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var targetObj = obj;
+    if (arguments.length > 1) {
+      // recursively initialize extendObj
+      var extendObj = _.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
+      // add extendObj properties to targetObj
+      for (var key in extendObj) {
+        // only add properties that are not present on target
+        if (!targetObj.hasOwnProperty(key)) {
+          targetObj[key] = extendObj[key];
+        }
+      }
+    }
+    return targetObj;
   };
 
 
