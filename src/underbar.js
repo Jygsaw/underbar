@@ -498,6 +498,29 @@ var _ = {};
   //
   // See the Underbar readme for details.
   _.throttle = function(func, wait) {
+    var scheduled = false;
+    var lastTime = 0;
+    var throttledFunc;
+
+    return function() {
+      var currTime = new Date().getTime();
+      if (currTime - lastTime > wait) {
+        lastTime = currTime;
+        throttledFunc = _.once(func);
+        return throttledFunc.apply(this, arguments);
+      } else {
+        if (!scheduled) {
+          scheduled = true;
+          _.delay(function() {
+            scheduled = false;
+            lastTime = new Date().getTime();
+            throttledFunc = _.once(func);
+            throttledFunc.apply(this, arguments);
+          }, wait);
+        }
+        return throttledFunc.apply(this, arguments);
+      }
+    }
   };
 
 }).call(this);
